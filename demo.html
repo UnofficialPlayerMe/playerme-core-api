@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>API Test Page</title>
+
+    <script src="dist/playerme.models.js"></script>
+    <script src="dist/playerme.api.js"></script>
+
+    <script>
+        function onLoad() {
+            // Log library
+            console.log("PlayerMe", PlayerMe);
+
+            // Get model list
+            var apiList = document.getElementById("apiList");
+
+            // List models
+            for (var key in PlayerMe.API) {
+                var instance = new PlayerMe.API[key];
+                var prototype = PlayerMe.API[key].prototype;
+                var properties = Object.getOwnPropertyNames(prototype);
+
+                // Add to list
+                var listItem = document.createElement("LI");
+                listItem.innerHTML = "<h3 style='margin-bottom:0'>"+key+"</h3>";
+                apiList.appendChild(listItem);
+
+                // List members
+                var subList = document.createElement("UL");
+                for (var i in properties) {
+                    var prop = properties[i];
+                    var propType = typeof instance[prop];
+
+                    var listSubItem = document.createElement("LI");
+                    listSubItem.innerHTML = prop+" : <span style='color:grey'>"+propType+"</span>";
+                    subList.appendChild(listSubItem);
+                    listItem.appendChild(subList);
+                }
+            }
+        } // End of onLoad
+    </script>
+
+</head>
+<body onload="onLoad()">
+
+<h1>API Test Page</h1>
+<ul id="apiList"></ul>
+
+</body>
+</html>
