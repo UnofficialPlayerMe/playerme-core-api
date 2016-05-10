@@ -21,7 +21,8 @@ gulp.task('build:source', function() {
                 loaders: [
                     {test: /\.js$/, loader: 'babel'}
                 ]
-            }
+            },
+            externals:{"player-core-models":"PlayerMe.models"}
         })
     )
     .pipe(
