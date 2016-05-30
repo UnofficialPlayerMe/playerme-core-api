@@ -1,6 +1,12 @@
 import {createQueryString} from '../helpers/AdapterHelper';
 
 /**
+ * Global variable containing the next available ID for an adaptor
+ * @type {number}
+ */
+var lastAdapterId = 0;
+
+/**
  * Process requests using JSONP.
  * Browsers allow this method for cross-domain calls, but only GET requests.
  */
@@ -8,14 +14,30 @@ class JSONPRequestAdapter {
     constructor()
     {
         /**
+         * The Unique ID of this instance
+         * @type {number}
+         * @private
+         */
+        this._instanceId = lastAdapterId+1 % 5000; // Wrap at 5000 so ID doesn't get too high
+        lastAdapterId = this._instanceId;
+
+        /**
+         * The next ID to use in a callback reference name
+         * @@member {number}
+         * @private
+         */
+        this._lastCallbackId = 1;
+
+        /**
          * The object-chain up from window, where JSONP callbacks are stored.
-         * @type {string}
+         * @member {string}
+         * @private
          */
         this._callbackNamespace = "playermeJSONP.callbacks";
 
         /**
          * The top object defined by CALLBACK_NAMESPACE, where JSONP callbacks are stored.
-         * @type {object}
+         * @member {object}
          * @private
          */
         this._callbackContainer = this._setupCallbackContainer(
@@ -24,8 +46,10 @@ class JSONPRequestAdapter {
 
         //TODO Remove test
         this.get("https://player.me/api/v1/feed", null, (payload) => {
-            console.log("Callback", payload)
+            console.log("JSONP Test Callback", payload)
         });
+
+        //TODO If promises are added, check that the Promise class exists
     }
 
     /**
@@ -62,6 +86,17 @@ class JSONPRequestAdapter {
         return parent[objectName];
     }
 
+    /**
+     * Get the next available reference name of a callback
+     * @returns {string}
+     * @private
+     */
+    _generateCallbackRef(){
+        var currentCallbackId = this._lastCallbackId+1 % 5000;// Wrap at 5000 so ID doesn't get too high
+        this._lastCallbackId = currentCallbackId;
+        return 'jsonp'+this._instanceId + '_' + currentCallbackId;
+    }
+
     // TODO Replace callback with promise
     get(url, data, callback, callbackThis){
         // Setup defaults
@@ -69,31 +104,31 @@ class JSONPRequestAdapter {
             data = {};
         }
 
-        //TODO Generate unique name
-        var callbackName = "testCallback";
+        // Get the reference for this callback
+        var callbackRef = this._generateCallbackRef();
 
         // Create a script element for JSONP
         var scriptElement = document.createElement('script');
         var documentHead = document.getElementsByTagName("head")[0];
 
-        // Setup callback
-        this._callbackContainer[callbackName] = (payload) => {
-            console.log("CallbackContainer", payload);
+        // Setup callback wrapper
+        this._callbackContainer[callbackRef] = (payload) => {
             // Remove script and callback
             documentHead.removeChild(scriptElement);
-            delete this._callbackContainer[callbackName];
+            delete this._callbackContainer[callbackRef];
 
             // Run callback
             callback.call(callbackThis || this, payload);
         };
 
         // Add the full callback path to player.me's JSON callback parameter
-        data.callback = this._callbackNamespace+"."+callbackName;
+        data.callback = this._callbackNamespace + '.' + callbackRef;
 
         // Build query string
         var queryString = createQueryString(data);
 
         // Attach the script tag for this JSONP request
+        scriptElement.setAttribute("data-callback", callbackRef);
         scriptElement.setAttribute("src", url + queryString);
         documentHead.appendChild(scriptElement);
     }
