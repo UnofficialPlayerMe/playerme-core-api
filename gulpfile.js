@@ -21,7 +21,7 @@ gulp.task('build:source', function() {
             },
             module: {
                 loaders: [
-                    {test: /\.js$/, loader: 'babel'}
+                    {test: /\.js$/, loader: 'babel', exclude: [/node_modules/, /bower_components/]}
                 ]
             },
             externals:{"player-core-models":"PlayerMe.models"}
