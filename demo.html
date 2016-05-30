@@ -8,7 +8,11 @@
     <script src="dist/playerme.api.js"></script>
 
     <script>
-        function onLoad() {
+        function onLoad(){
+            listModules();
+        }
+
+        function listModules() {
             // Log library
             console.log("PlayerMe", PlayerMe);
 
@@ -50,12 +54,27 @@
                 }
             }
         } // End of onLoad
+
+        function clickedRequest(url){
+            var data = null;
+            var cb = function(payload){
+                console.log(payload);
+            };
+            console.log("GET", url, data);
+            PlayerMe.API.APIService.get(url, data, cb);
+        }
     </script>
 
 </head>
 <body onload="onLoad()">
 
 <h1>API Test Page</h1>
+
+<h2>Test Actions</h2>
+<button onclick="clickedRequest('api/v1/feed')">Request Feed</button>
+<button onclick="clickedRequest('api/v1/users/default')">Request User</button>
+
+<h2>Module Members</h2>
 <ul id="apiList"></ul>
 
 </body>

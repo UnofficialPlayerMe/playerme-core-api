@@ -44,11 +44,6 @@ class JSONPRequestAdapter {
             this._callbackNamespace
         );
 
-        //TODO Remove test
-        this.get("https://player.me/api/v1/feed", null, (payload) => {
-            console.log("JSONP Test Callback", payload)
-        });
-
         //TODO If promises are added, check that the Promise class exists
     }
 
