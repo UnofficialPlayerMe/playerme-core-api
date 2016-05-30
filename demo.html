@@ -17,9 +17,20 @@
 
             // List models
             for (var key in PlayerMe.API) {
-                var instance = new PlayerMe.API[key];
-                var prototype = PlayerMe.API[key].prototype;
-                var properties = Object.getOwnPropertyNames(prototype);
+                var apiObject = PlayerMe.API[key];
+                var instance = null;
+                var properties = [];
+
+                switch (typeof apiObject){
+                    case 'function':
+                        instance = new apiObject;
+                        properties = Object.getOwnPropertyNames(apiObject.prototype);
+                        break;
+                    case 'object':
+                        instance = apiObject;
+                        properties = Object.getOwnPropertyNames(apiObject);
+                        break;
+                }
 
                 // Add to list
                 var listItem = document.createElement("LI");

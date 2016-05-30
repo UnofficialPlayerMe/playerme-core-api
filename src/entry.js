@@ -1,7 +1,15 @@
+import settings from './settings';
+
 import UsersRepository from './api/users/UsersRepository';
-import JSONPRequestAdapter from './adapter/JSONPRequestAdapter';
+
+import JSONPRequestAdapter from './request/adapter/JSONPRequestAdapter';
+
+var adapters = {
+    JSONP: new JSONPRequestAdapter
+};
 
 export {
-    UsersRepository,
-    JSONPRequestAdapter
+    settings,
+    adapters,
+    UsersRepository
 };

@@ -1,4 +1,4 @@
-import {createQueryString} from './AdapterHelper';
+import {createQueryString} from '../helpers/AdapterHelper';
 
 /**
  * Process requests using JSONP.
