@@ -24,13 +24,16 @@
                 var apiObject = PlayerMe.API[key];
                 var instance = null;
                 var properties = [];
+                var type = typeof apiObject;
 
                 switch (typeof apiObject){
                     case 'function':
+                        if (apiObject.name) type = apiObject.name;
                         instance = new apiObject;
                         properties = Object.getOwnPropertyNames(apiObject.prototype);
                         break;
                     case 'object':
+                        type = Object.getPrototypeOf(apiObject).constructor.name;
                         instance = apiObject;
                         properties = Object.getOwnPropertyNames(apiObject);
                         break;
@@ -38,14 +41,16 @@
 
                 // Add to list
                 var listItem = document.createElement("LI");
-                listItem.innerHTML = "<h3 style='margin-bottom:0'>"+key+"</h3>";
+                listItem.innerHTML = "<h3 style='margin-bottom:0'>"+
+                        key + " : <span style='color:grey'>"+type+"</span>"+
+                        "</h3>";
                 apiList.appendChild(listItem);
 
                 // List members
                 var subList = document.createElement("UL");
                 for (var i in properties) {
                     var prop = properties[i];
-                    var propType = typeof instance[prop];
+                    var propType = Object.getPrototypeOf(instance[prop]).constructor.name;
 
                     var listSubItem = document.createElement("LI");
                     listSubItem.innerHTML = prop+" : <span style='color:grey'>"+propType+"</span>";
