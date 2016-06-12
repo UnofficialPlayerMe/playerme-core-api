@@ -1,4 +1,7 @@
-var make = function(filename, target){
+var path = require('path');
+var projectRoot = process.cwd();
+
+var make = function(filename, target, externals, alias){
     // https://webpack.github.io/docs/configuration.html
     var jsExcludes = []; //[/node_modules/, /bower_components/];
     return {
@@ -11,18 +14,25 @@ var make = function(filename, target){
                 {test: /\.js$/, loader: 'babel', exclude: jsExcludes}
             ]
         },
-        externals:{
-            "player-core-models": "PlayerMe.models"
+        resolve: {
+            alias: alias
         },
+        externals: externals,
         target: target
     };
 };
 
 var makeWeb = function(filename){
-    return make(filename, 'web');
+    var externals = {
+        "player-core-models": "PlayerMe.models"
+    };
+    return make(filename, 'web', externals, null);
 };
 var makeNode = function(filename){
-    return make(filename, 'node');
+    var alias = {
+        'player-core-models': path.join(projectRoot, 'node_modules/playerme-core-models/src/entry')
+    };
+    return make(filename, 'node', null, alias);
 };
 
 module.exports = {

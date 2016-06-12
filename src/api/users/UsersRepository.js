@@ -6,7 +6,7 @@ import {UserExtendedModel} from 'player-core-models';
 class UsersRepository {
     constructor()
     {
-        console.log("UserExtendedModel for UsersRepository:", new UserExtendedModel());
+        console.log("new UserExtendedModel for UsersRepository:", new UserExtendedModel());
     }
 
     get()

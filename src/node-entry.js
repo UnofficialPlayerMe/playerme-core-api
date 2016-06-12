@@ -1,15 +1,16 @@
 // Load dependencies
-var entry = require('./entry');
-var models = require('../node_modules/playerme-core-models/src/entry');
+import * as entry from './entry';
+import * as models from 'player-core-models';
 
 // Debug logging
 if (process.env.NODE_ENV === 'development') {
+
     // Startup test, checking ES2015 is supported
     try {
         let testES2015 = () => console.info("Running ", process.mainModule.filename);
         testES2015();
         console.info('');
-    }catch(e){
+    } catch(e) {
         console.error("ERROR: Startup test failed.");
         console.error(e);
         process.exit(1);
@@ -21,14 +22,8 @@ if (process.env.NODE_ENV === 'development') {
         }
         return null;
     };
-    // var getClassNameOfInstance = function(instance){
-    //     if (typeof instance === 'object' && instance.constructor){
-    //         return instance.constructor.name;
-    //     }
-    //     return null;
-    // };
 
-    var logModule = function(name, entry, maxDepth=1, currentDepth=0){
+    var logObject = function(name, entry, maxDepth=1, currentDepth=0){
         // Get type
         var entryType = typeof entry;
         var isObject = entryType === 'object';
@@ -47,13 +42,19 @@ if (process.env.NODE_ENV === 'development') {
         if (hasChildren && currentDepth < maxDepth) {
             for (var entryKey in entry) {
                 if (!entry.hasOwnProperty(entryKey)) continue;
-                logModule(entryKey, entry[entryKey], maxDepth, currentDepth + 1);
+                logObject(entryKey, entry[entryKey], maxDepth, currentDepth + 1);
             }
         }
 
         if (currentDepth==0) console.info('');
     };
 
-    logModule('Models', models, 1);
-    logModule('Entry', entry, 2);
+    // Log modules
+    logObject('Models', models, 1);
+    logObject('Entry', entry, 2);
+
+    // Instantiate test UsersRepository
+    console.log("Creating new UsersRepository...");
+    var UsersRepository = entry.UsersRepository;
+    logObject('new UsersRepository', new UsersRepository(), 2);
 }

@@ -1,4 +1,4 @@
-import JSONPRequestAdapter from './adapter/JSONPRequestAdapter';
+// import JSONPRequestAdapter from './adapter/JSONPRequestAdapter';
 
 class APIService {
 
@@ -24,7 +24,7 @@ class APIService {
 
         // Set defaults
         this.baseUrl = "https://player.me/";
-        this.setAdapter(new JSONPRequestAdapter); //TODO Set default adapter
+        // this.setAdapter(new JSONPRequestAdapter); //TODO Set default adapter
     }
 
     //

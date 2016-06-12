@@ -57,8 +57,8 @@ gulp.task('run:node', function() {
     var stream = nodemon({
         env: { 'NODE_ENV': 'development' }
     ,   script: './dist/node-playerme.api.js'
-//  ,   watch: 'src'
-//  ,   ext: 'html js'
+    ,   watch: 'src'
+    ,   ext: 'js'
 //  ,   ignore: ['ignored.js']
     ,   tasks: ['build:node']
     });
