@@ -1,11 +1,13 @@
 var gulp          = require('gulp');
 var path          = require('path');
+var rename        = require('gulp-rename');
+
 var webpackStream = require('webpack-stream');
 var minify        = require('gulp-minify');
+
 var nodemon       = require('gulp-nodemon');
 
 var Log = require('./gulp/logging');
-
 var Utils = require('playerme-core-utils');
 
 //////////////////////////////////////
@@ -51,18 +53,22 @@ gulp.task('build:node', function() {
 });
 
 gulp.task('run:node', function() {
-    var instance = nodemon({
-        script: './dist/node-playerme.api.js'
-    ,   ext: 'html js'
-    ,   env: { 'NODE_ENV': 'development' }
+
+    var stream = nodemon({
+        env: { 'NODE_ENV': 'development' }
+    ,   script: './dist/node-playerme.api.js'
+//  ,   watch: 'src'
+//  ,   ext: 'html js'
 //  ,   ignore: ['ignored.js']
     ,   tasks: ['build:node']
     });
 
-    instance.on('start',   function(){ Log.cyan(   '[nodemon] started'   ); });
-    instance.on('restart', function(){ Log.magenta('[nodemon] restarted' ); });
-    instance.on('exit',    function(){ Log.cyan(   '[nodemon] quit'      ); });
-    instance.on('crash',   function(){ Log.red(    '[nodemon] crashed'   ); });
+    stream.on('start',   function(){ Log.cyan(   '[nodemon] started'   ); });
+    stream.on('restart', function(){ Log.magenta('[nodemon] restarted' ); });
+    stream.on('exit',    function(){ Log.cyan(   '[nodemon] quit'      ); });
+    stream.on('crash',   function(){ Log.red(    '[nodemon] crashed'   ); });
+
+    return stream;
 });
 
 gulp.task('test', function (done) {
