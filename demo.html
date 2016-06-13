@@ -64,6 +64,19 @@
             var data = null;
             var cb = function(payload){
                 console.log(payload);
+
+                var title =
+                    payload.method + " " +
+                    payload.uri + " " +
+                    (payload.success ? "(success)" : "(failure)")
+                ;
+
+                var body = '';
+                for (var key in payload.results){
+                    body += '\n\n' + key +": \n" + JSON.stringify(payload.results[key]);
+                }
+
+                alert(title+body);
             };
             console.log("GET", url, data);
             PlayerMe.API.APIService.get(url, data, cb);
