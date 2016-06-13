@@ -57,4 +57,9 @@ if (process.env.NODE_ENV === 'development') {
     console.log("Creating new UsersRepository...");
     var UsersRepository = entry.UsersRepository;
     logObject('new UsersRepository', new UsersRepository(), 2);
+
+    console.log("Load feed...");
+    entry.APIService.get('api/v1/feed', null, (payload)=>{
+        console.log("Feed result:", payload);
+    });
 }
