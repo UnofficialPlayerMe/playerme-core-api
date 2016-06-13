@@ -26,13 +26,13 @@ var makeWeb = function(filename){
     var externals = {
         "player-core-models": "PlayerMe.models"
     };
-    return make(filename, 'web', externals, null);
+    return make(filename, 'web', externals, {});
 };
 var makeNode = function(filename){
     var alias = {
         'player-core-models': path.join(projectRoot, 'node_modules/playerme-core-models/src/entry')
     };
-    return make(filename, 'node', null, alias);
+    return make(filename, 'node', {}, alias);
 };
 
 module.exports = {

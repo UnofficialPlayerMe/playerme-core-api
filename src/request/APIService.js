@@ -1,6 +1,9 @@
-// import JSONPRequestAdapter from './adapter/JSONPRequestAdapter';
+import AbstractRequestAdapter from './adapter/AbstractRequestAdapter';
 
-class APIService {
+/**
+ * A singleton wrapper for Request adapters
+ */
+class APIService extends AbstractRequestAdapter{
 
     //
     // Constructor
@@ -8,6 +11,8 @@ class APIService {
 
     constructor()
     {
+        super();
+
         /**
          * The URL that gets prepended to partial request URLs
          * @member {string}
@@ -24,7 +29,6 @@ class APIService {
 
         // Set defaults
         this.baseUrl = "https://player.me/";
-        // this.setAdapter(new JSONPRequestAdapter); //TODO Set default adapter
     }
 
     //
@@ -120,8 +124,13 @@ class APIService {
      * Get the current adapter
      * @param {boolean} [validate=false] Validate the adapter before returning it
      * @returns {object} The adapter
+     * @throws {TypeError} If adapter is invalid
+     * @throws {ReferenceError} If no adapter is set
      */
     getAdapter(validate=false){
+        if (!this._adapter) {
+            throw new ReferenceError("APIService error: No adapter set");
+        }
         if (validate){
             this.validateAdapter(this._adapter);
         }
@@ -130,9 +139,15 @@ class APIService {
 
     /**
      * Set the adapter
-     * @param {object} adapter Instance of an adapter
+     * @param {AbstractRequestAdapter} adapter Adapter instance or class
+     * @throws {TypeError} If adapter is invalid
      */
     setAdapter(adapter){
+        // Turn class into an instance
+        if (typeof adapter === 'function' && adapter.constructor){
+            adapter = new adapter();
+        }
+
         this.validateAdapter(adapter);
         this._adapter = adapter;
     }
@@ -143,37 +158,22 @@ class APIService {
      * @throws {TypeError}
      */
     validateAdapter(adapter){
-        // Wrap up logic for creating error
-        var typeError = function(description){
-            if (typeof description !== 'string'){
-                description = '';
-            }else{
-                description = ' '+description
-            }
-            return new TypeError("APIRequest adapter is invalid." + description);
-        };
-
         // Assert adapter is an object
         if (typeof adapter !== 'object') {
-            throw typeError();
+            throw new TypeError('Invalid APIRequest adapter: Not an object.');
         }
 
-        // Assert adapter has each method
-        if (typeof adapter.get !== 'function') {
-            throw typeError('No GET method');
+        // Assert adapter inherits from AbstractRequestAdapter
+        var adapterClass = adapter.constructor;
+        while (adapterClass){
+            if (adapterClass === AbstractRequestAdapter) return;
+            adapterClass = Object.getPrototypeOf(adapterClass);
         }
-        if (typeof adapter.post !== 'function') {
-            throw typeError('No POST method');
-        }
-        if (typeof adapter.put !== 'function') {
-            throw typeError('No PUT method');
-        }
-        if (typeof adapter.del !== 'function') {
-            throw typeError('No DELETE method');
-        }
+        throw new TypeError("Invalid APIRequest adapter: Doesn't inherit from AbstractRequestAdapter.");
     }
 
     /// End of APIService
 }
 
+// Export a singleton instance
 export default new APIService;

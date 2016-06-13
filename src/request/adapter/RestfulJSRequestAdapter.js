@@ -1,12 +1,15 @@
+import AbstractRequestAdapter from './AbstractRequestAdapter';
 import restfulJs from 'restful.js';
 
 /**
  * Process requests using https://www.npmjs.com/package/request
  * For use in environments where cross-domain requests isn't an issue (i.e. Node.js, Cordova, etc)
  */
-class RestfulJSRequestAdapter {
+class RestfulJSRequestAdapter extends AbstractRequestAdapter{
     constructor()
     {
+        super();
+        
         console.log("RestfulJSRequestAdapter", {restfulJs:restfulJs});
     }
 

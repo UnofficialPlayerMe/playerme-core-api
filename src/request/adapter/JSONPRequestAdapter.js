@@ -1,3 +1,4 @@
+import AbstractRequestAdapter from './AbstractRequestAdapter';
 import {createQueryString} from '../helpers/AdapterHelper';
 
 /**
@@ -10,9 +11,11 @@ var lastAdapterId = 0;
  * Process requests using JSONP.
  * Browsers allow this method for cross-domain calls, but only GET requests.
  */
-class JSONPRequestAdapter {
+class JSONPRequestAdapter extends AbstractRequestAdapter{
     constructor()
     {
+        super();
+
         /**
          * The Unique ID of this instance
          * @type {number}
