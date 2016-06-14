@@ -50,16 +50,18 @@ if (process.env.NODE_ENV === 'development') {
     };
 
     // Log modules
-    logObject('Models', models, 1);
-    logObject('Entry', entry, 2);
+    // logObject('Models', models, 1);
+    // logObject('Entry', entry, 2);
 
     // Instantiate test UsersRepository
-    console.log("Creating new UsersRepository...");
+    // console.log("Creating new UsersRepository...");
     var UsersRepository = entry.UsersRepository;
-    logObject('new UsersRepository', new UsersRepository(), 2);
+    // logObject('new UsersRepository', new UsersRepository(), 2);
 
     console.log("Load feed...");
     entry.APIService.get('api/v1/feed', null, (payload)=>{
         console.log("Feed result:", payload);
     });
 }
+
+// setInterval(()=>{ console.log("Keep-alive tick") }, 5*1000);

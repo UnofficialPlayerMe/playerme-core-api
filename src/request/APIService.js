@@ -35,32 +35,97 @@ class APIService extends AbstractRequestAdapter{
     // Request Methods
     //
 
-    get(url, data, callback, callbackThis){
+    _request(method, url, data, callback, callbackThis){
+        var requestBodyRequired = false;
+        switch(method){
+            case 'get':  requestBodyRequired = false; break;
+            case 'post': requestBodyRequired = true;  break;
+            case 'put':  requestBodyRequired = true;  break;
+            case 'del':  requestBodyRequired = false; break;
+            default: throw new Error("Unhandled method ["+method+"] passed to APIService._request().");
+        }
+
+        this._assertURL(method, url);
+        this._assertData(method, data, requestBodyRequired);
+        this._assertCallback(method, callback, callbackThis);
+
         var adapter = this.getAdapter(true);
         url = this.prependBaseUrl(url);
 
-        return adapter.get(url, data, callback, callbackThis);
+        return adapter[method](url, data, callback, callbackThis);
+    }
+
+    get(url, data, callback, callbackThis){
+        return this._request('get', url, data, callback, callbackThis);
     }
 
     post(url, data, callback, callbackThis){
-        var adapter = this.getAdapter(true);
-        url = this.prependBaseUrl(url);
-
-        return adapter.get(url, data, callback, callbackThis);
+        return this._request('post', url, data, callback, callbackThis);
     }
 
     put(url, data, callback, callbackThis){
-        var adapter = this.getAdapter(true);
-        url = this.prependBaseUrl(url);
-
-        return adapter.get(url, data, callback, callbackThis);
+        return this._request('put', url, data, callback, callbackThis);
     }
 
     del(url, data, callback, callbackThis){
-        var adapter = this.getAdapter(true);
-        url = this.prependBaseUrl(url);
+        return this._request('del', url, data, callback, callbackThis);
+    }
 
-        return adapter.get(url, data, callback, callbackThis);
+    //
+    // Request Assertions
+    //
+
+    /**
+     * Assert that the URL is valid
+     * @param {string} method Name of the method this is being called in
+     * @param {string} url The request URL
+     * @throws {ReferenceError}
+     * @private
+     */
+    _assertURL(method, url){
+        if (!url){
+            throw new ReferenceError("No URL passed to APIService:"+method+".");
+        }
+        if (typeof url != 'string'){
+            throw new ReferenceError("Invalid URL passed to APIService:"+method+". Was ["+typeof url+"].");
+        }
+    }
+
+    /**
+     * Assert that the data object is valid
+     * @param {string} method Name of the method this is being called in
+     * @param {data} data The data to be used in the request
+     * @param {boolean} required If the request body should be truthy
+     * @throws {ReferenceError}
+     * @private
+     */
+    _assertData(method, data, required){
+        if (!required && !data){
+            return;
+        }
+        if (typeof data != 'object'){
+            throw new ReferenceError("Invalid data passed to APIService:"+method+". Was ["+typeof data+"].");
+        }
+    }
+
+    /**
+     * Assert that the callback is valid
+     * @param {string} method Name of the method this is being called in
+     * @param {function} callback The callback when the request has been fulfilled
+     * @param {object} [callbackThis] The 'this' to use on the callback
+     * @throws {ReferenceError}
+     * @private
+     */
+    _assertCallback(method, callback, callbackThis){
+        if (!callback){
+            throw new ReferenceError("No callback passed to APIService:"+method+".");
+        }
+        if (typeof callback != 'function'){
+            throw new ReferenceError("Invalid callback passed to APIService:"+method+". Was ["+typeof callback+"].");
+        }
+        if (callbackThis && typeof callbackThis != 'object'){
+            throw new ReferenceError("Invalid callbackThis passed to APIService:"+method+". Was ["+typeof callbackThis+"].");
+        }
     }
 
     //

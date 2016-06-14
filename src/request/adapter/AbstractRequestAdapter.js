@@ -70,6 +70,15 @@ class AbstractRequestAdapter {
     del(url, data, callback, callbackThis){
         throw new Error("DEL not implemented by "+this.name);
     }
+
+    /**
+     * Turn an object into a query string
+     * @param data
+     * @returns {string}
+     */
+    objectToQueryString(data){ //TODO
+        return '';
+    }
 }
 
 export default AbstractRequestAdapter;
