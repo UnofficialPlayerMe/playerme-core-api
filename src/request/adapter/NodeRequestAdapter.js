@@ -53,9 +53,10 @@ class NodeRequestAdapter extends AbstractRequestAdapter{
         }).end();
     }
 
-    //TODO implement objectToQueryString
     get(url, data, callback, callbackThis){
-        url = this.objectToQueryString(data);
+        if (data) {
+            url = this.addToQueryString(url, data);
+        }
         this._request('GET', url, null, callback, callbackThis);
     }
     post(url, data, callback, callbackThis){

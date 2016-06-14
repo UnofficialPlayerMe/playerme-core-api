@@ -45,9 +45,9 @@ class APIService extends AbstractRequestAdapter{
             default: throw new Error("Unhandled method ["+method+"] passed to APIService._request().");
         }
 
-        this._assertURL(method, url);
-        this._assertData(method, data, requestBodyRequired);
-        this._assertCallback(method, callback, callbackThis);
+        validateURL(method, url);
+        validateData(method, data, requestBodyRequired);
+        validateCallback(method, callback, callbackThis);
 
         var adapter = this.getAdapter(true);
         url = this.prependBaseUrl(url);
@@ -69,63 +69,6 @@ class APIService extends AbstractRequestAdapter{
 
     del(url, data, callback, callbackThis){
         return this._request('del', url, data, callback, callbackThis);
-    }
-
-    //
-    // Request Assertions
-    //
-
-    /**
-     * Assert that the URL is valid
-     * @param {string} method Name of the method this is being called in
-     * @param {string} url The request URL
-     * @throws {ReferenceError}
-     * @private
-     */
-    _assertURL(method, url){
-        if (!url){
-            throw new ReferenceError("No URL passed to APIService:"+method+".");
-        }
-        if (typeof url != 'string'){
-            throw new ReferenceError("Invalid URL passed to APIService:"+method+". Was ["+typeof url+"].");
-        }
-    }
-
-    /**
-     * Assert that the data object is valid
-     * @param {string} method Name of the method this is being called in
-     * @param {data} data The data to be used in the request
-     * @param {boolean} required If the request body should be truthy
-     * @throws {ReferenceError}
-     * @private
-     */
-    _assertData(method, data, required){
-        if (!required && !data){
-            return;
-        }
-        if (typeof data != 'object'){
-            throw new ReferenceError("Invalid data passed to APIService:"+method+". Was ["+typeof data+"].");
-        }
-    }
-
-    /**
-     * Assert that the callback is valid
-     * @param {string} method Name of the method this is being called in
-     * @param {function} callback The callback when the request has been fulfilled
-     * @param {object} [callbackThis] The 'this' to use on the callback
-     * @throws {ReferenceError}
-     * @private
-     */
-    _assertCallback(method, callback, callbackThis){
-        if (!callback){
-            throw new ReferenceError("No callback passed to APIService:"+method+".");
-        }
-        if (typeof callback != 'function'){
-            throw new ReferenceError("Invalid callback passed to APIService:"+method+". Was ["+typeof callback+"].");
-        }
-        if (callbackThis && typeof callbackThis != 'object'){
-            throw new ReferenceError("Invalid callbackThis passed to APIService:"+method+". Was ["+typeof callbackThis+"].");
-        }
     }
 
     //
@@ -238,6 +181,60 @@ class APIService extends AbstractRequestAdapter{
     }
 
     /// End of APIService
+}
+
+//
+// Inaccessible Validation Methods
+//
+
+/**
+ * Validate that the URL is valid
+ * @param {string} method Name of the method this is being called in
+ * @param {string} url The request URL
+ * @throws {ReferenceError}
+ */
+function validateURL(method, url){
+    if (!url){
+        throw new ReferenceError("No URL passed to APIService:"+method+".");
+    }
+    if (typeof url != 'string'){
+        throw new ReferenceError("Invalid URL passed to APIService:"+method+". Was ["+typeof url+"].");
+    }
+}
+
+/**
+ * Validate that the data object is valid
+ * @param {string} method Name of the method this is being called in
+ * @param {data} data The data to be used in the request
+ * @param {boolean} required If the request body should be truthy
+ * @throws {ReferenceError}
+ */
+function validateData(method, data, required){
+    if (!required && !data){
+        return;
+    }
+    if (typeof data != 'object'){
+        throw new ReferenceError("Invalid data passed to APIService:"+method+". Was ["+typeof data+"].");
+    }
+}
+
+/**
+ * Validate that the callback is valid
+ * @param {string} method Name of the method this is being called in
+ * @param {function} callback The callback when the request has been fulfilled
+ * @param {object} [callbackThis] The 'this' to use on the callback
+ * @throws {ReferenceError}
+ */
+function validateCallback(method, callback, callbackThis){
+    if (!callback){
+        throw new ReferenceError("No callback passed to APIService:"+method+".");
+    }
+    if (typeof callback != 'function'){
+        throw new ReferenceError("Invalid callback passed to APIService:"+method+". Was ["+typeof callback+"].");
+    }
+    if (callbackThis && typeof callbackThis != 'object'){
+        throw new ReferenceError("Invalid callbackThis passed to APIService:"+method+". Was ["+typeof callbackThis+"].");
+    }
 }
 
 // Export a singleton instance

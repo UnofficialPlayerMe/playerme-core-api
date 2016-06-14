@@ -55,12 +55,17 @@ if (process.env.NODE_ENV === 'development') {
 
     // Instantiate test UsersRepository
     // console.log("Creating new UsersRepository...");
-    var UsersRepository = entry.UsersRepository;
+    // var UsersRepository = entry.UsersRepository;
     // logObject('new UsersRepository', new UsersRepository(), 2);
 
-    console.log("Load feed...");
-    entry.APIService.get('api/v1/feed', null, (payload)=>{
-        console.log("Feed result:", payload);
+    console.log("Load post...");
+    entry.APIService.get('api/v1/feed/13112', null, (payload)=> {
+        console.log("Post result:", payload);
+    });
+
+    console.log("Load comment...");
+    entry.APIService.get('api/v1/feed/13112/comments', {_limit:1}, (payload)=> {
+        console.log("Comment result:", payload);
     });
 }
 
