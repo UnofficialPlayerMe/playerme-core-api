@@ -35,6 +35,8 @@ class APIService extends AbstractRequestAdapter{
     // Request Methods
     //
 
+    // TODO Use promises, rather than callbacks?
+    // TODO Have success & failure classes
     _request(method, url, data, callback, callbackThis){
         var requestBodyRequired = false;
         switch(method){
