@@ -2,12 +2,6 @@ import AbstractRequestAdapter from './AbstractRequestAdapter';
 import {createQueryString} from '../helpers/AdapterHelper';
 
 /**
- * Global variable containing the next available ID for an adaptor
- * @type {number}
- */
-var lastAdapterId = 0;
-
-/**
  * Process requests using JSONP.
  * Browsers allow this method for cross-domain calls, but only GET requests.
  */
@@ -17,19 +11,11 @@ class JSONPRequestAdapter extends AbstractRequestAdapter{
         super();
 
         /**
-         * The Unique ID of this instance
-         * @type {number}
-         * @private
-         */
-        this._instanceId = lastAdapterId+1 % 5000; // Wrap at 5000 so ID doesn't get too high
-        lastAdapterId = this._instanceId;
-
-        /**
          * The next ID to use in a callback reference name
          * @@member {number}
          * @private
          */
-        this._lastCallbackId = 1;
+        this._lastCallbackId = 0;
 
         /**
          * The object-chain up from window, where JSONP callbacks are stored.
@@ -88,9 +74,9 @@ class JSONPRequestAdapter extends AbstractRequestAdapter{
      * @private
      */
     _generateCallbackRef(){
-        var currentCallbackId = this._lastCallbackId+1 % 5000;// Wrap at 5000 so ID doesn't get too high
+        var currentCallbackId = (this._lastCallbackId+1) % Number.MAX_SAFE_INTEGER; // Wrap around so ID doesn't get too high
         this._lastCallbackId = currentCallbackId;
-        return 'jsonp'+this._instanceId + '_' + currentCallbackId;
+        return 'jsonp_' + currentCallbackId;
     }
 
     get(url, data){
@@ -152,4 +138,5 @@ class JSONPRequestAdapter extends AbstractRequestAdapter{
     }
 }
 
-export default JSONPRequestAdapter;
+// Return single instance, making it a singleton
+export default new JSONPRequestAdapter();
