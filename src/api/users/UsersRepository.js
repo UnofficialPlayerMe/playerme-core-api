@@ -13,7 +13,7 @@ class UsersRepository {
     /**
      *
      * @param {number|string} id The user's ID
-     * TODO Use callback/promise
+     * @return Promise
      */
     get(id)
     {
@@ -28,15 +28,22 @@ class UsersRepository {
             throw new TypeError("id passed to UsersRepository:get() isn't a number. Was ["+idType+"].");
         }
 
-        console.log('UsersRepository.get('+id+')...');
-
-        APIService.get('api/v1/users/'+id, null, (payload)=> {
-            console.log('... UsersRepository.get('+id+'):');
-            console.log('> Payload:', payload);
-
-            if (payload.results){
-                console.log('> User:', new UserExtendedModel(payload.results));
+        return new Promise((resolve, reject)=>{
+            try {
+                var promise = APIService.get('api/v1/users/' + id, null);
+            }catch(e){
+                reject(e);
+                return;
             }
+
+            promise.then((response)=>{
+                if (response.results){
+                    console.log('UsersRepository', response); //TODO Custom response class
+                    resolve(new UserExtendedModel(response.results));
+                } else {
+                    reject(response);
+                }
+            });
         });
     }
 

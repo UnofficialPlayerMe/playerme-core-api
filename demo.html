@@ -60,26 +60,49 @@
             }
         } // End of onLoad
 
+        function alertObject(title, obj){
+            var body = '';
+            for (var key in obj){
+                body += '\n\n' + key +": \n" + JSON.stringify(obj[key]);
+            }
+            alert(title+body);
+        }
+
         function clickedRequest(url){
             var data = null;
-            var cb = function(payload){
-                console.log(payload);
+            console.log("GET", url, data);
 
+            try {
+                var promise = PlayerMe.API.APIService.get(url, data);
+            } catch(e) {
+                console.error(e);
+                alertObject('Error', e);
+                return;
+            }
+
+            promise.then(function(payload){
+                console.log(payload);
                 var title =
                     payload.method + " " +
                     payload.uri + " " +
                     (payload.success ? "(success)" : "(failure)")
                 ;
+                alertObject(title, payload);
+            });
+        }
 
-                var body = '';
-                for (var key in payload.results){
-                    body += '\n\n' + key +": \n" + JSON.stringify(payload.results[key]);
-                }
-
-                alert(title+body);
-            };
-            console.log("GET", url, data);
-            PlayerMe.API.APIService.get(url, data, cb);
+        function clickedUsersRepository(id){
+            try {
+                var promise = PlayerMe.API.UsersRepository.get(id);
+                promise.then(function(payload){
+                    console.log(payload);
+                    alertObject('UsersRepository.get('+id+')', payload);
+                })
+            }catch(e){
+                console.error(e);
+                alertObject('Error', e);
+                return;
+            }
         }
     </script>
 
@@ -89,8 +112,13 @@
 <h1>API Test Page</h1>
 
 <h2>Test Actions</h2>
-<button onclick="clickedRequest('api/v1/feed')">Request Feed</button>
-<button onclick="clickedRequest('api/v1/users/default')">Request User</button>
+<p>
+    <button onclick="clickedRequest('api/v1/feed')">Request Feed</button>
+    <button onclick="clickedRequest('api/v1/users/default')">Request User</button>
+</p>
+<p>
+    <button onclick="clickedUsersRepository(1)">UsersRepository GET</button>
+</p>
 
 <h2>Module Members</h2>
 <ul id="apiList"></ul>

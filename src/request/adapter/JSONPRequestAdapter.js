@@ -46,8 +46,6 @@ class JSONPRequestAdapter extends AbstractRequestAdapter{
         this._callbackContainer = this._setupCallbackContainer(
             this._callbackNamespace
         );
-
-        //TODO If promises are added, check that the Promise class exists
     }
 
     /**
@@ -95,40 +93,50 @@ class JSONPRequestAdapter extends AbstractRequestAdapter{
         return 'jsonp'+this._instanceId + '_' + currentCallbackId;
     }
 
-    // TODO Replace callback with promise
-    get(url, data, callback, callbackThis){
-        // Setup defaults
-        if (!data || typeof data !== 'object'){
-            data = {};
-        }
+    get(url, data){
+        return new Promise((resolve, reject)=>{
+            try {
 
-        // Get the reference for this callback
-        var callbackRef = this._generateCallbackRef();
+                // Setup defaults
+                if (!data || typeof data !== 'object') {
+                    data = {};
+                }
 
-        // Create a script element for JSONP
-        var scriptElement = document.createElement('script');
-        var documentHead = document.getElementsByTagName("head")[0];
+                // Get the reference for this callback
+                var callbackRef = this._generateCallbackRef();
 
-        // Setup callback wrapper
-        this._callbackContainer[callbackRef] = (payload) => {
-            // Remove script and callback
-            documentHead.removeChild(scriptElement);
-            delete this._callbackContainer[callbackRef];
+                // Create a script element for JSONP
+                var scriptElement = document.createElement('script');
+                var documentHead = document.getElementsByTagName("head")[0];
 
-            // Run callback
-            callback.call(callbackThis || this, payload);
-        };
+                // Setup callback wrapper
+                this._callbackContainer[callbackRef] = (payload) => {
+                    try {
+                        // Remove script and callback
+                        documentHead.removeChild(scriptElement);
+                        delete this._callbackContainer[callbackRef];
+                        resolve(payload);
+                    }catch(e){
+                        reject(e);
+                    }
+                };
 
-        // Add the full callback path to player.me's JSON callback parameter
-        data.callback = this._callbackNamespace + '.' + callbackRef;
+                // Add the full callback path to player.me's JSON callback parameter
+                data.callback = this._callbackNamespace + '.' + callbackRef;
 
-        // Build query string
-        var queryString = createQueryString(data);
+                // Build query string
+                var queryString = createQueryString(data);
 
-        // Attach the script tag for this JSONP request
-        scriptElement.setAttribute("data-callback", callbackRef);
-        scriptElement.setAttribute("src", url + queryString);
-        documentHead.appendChild(scriptElement);
+                // Attach the script tag for this JSONP request
+                scriptElement.setAttribute("data-callback", callbackRef);
+                scriptElement.setAttribute("src", url + queryString);
+                documentHead.appendChild(scriptElement);
+
+            }catch(e){
+                //TODO Tidy up if it gets here
+                reject(e);
+            }
+        });
     }
 
     post(){

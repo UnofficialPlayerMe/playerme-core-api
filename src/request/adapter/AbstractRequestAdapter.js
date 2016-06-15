@@ -19,13 +19,11 @@ class AbstractRequestAdapter {
      * Perform a GET request
      * @param {string} url
      * @param {object} data
-     * @param {function} callback
-     * @param {object} callbackThis
+     * @return Promise
      * @throws Error Error when not implemented
      * TODO Create not-implemented error
-     * TODO Replace callback with promise
      */
-    get(url, data, callback, callbackThis){
+    get(url, data){
         throw new Error("GET not implemented by "+this.name);
     }
 
@@ -33,13 +31,11 @@ class AbstractRequestAdapter {
      * Perform a POST request
      * @param {string} url
      * @param {object} data
-     * @param {function} callback
-     * @param {object} callbackThis
+     * @return Promise
      * @throws Error Error when not implemented
      * TODO Create not-implemented error
-     * TODO Replace callback with promise
      */
-    post(url, data, callback, callbackThis){
+    post(url, data){
         throw new Error("POST not implemented by "+this.name);
     }
 
@@ -47,13 +43,11 @@ class AbstractRequestAdapter {
      * Perform a PUT request
      * @param {string} url
      * @param {object} data
-     * @param {function} callback
-     * @param {object} callbackThis
+     * @return Promise
      * @throws Error Error when not implemented
      * TODO Create not-implemented error
-     * TODO Replace callback with promise
      */
-    put(url, data, callback, callbackThis){
+    put(url, data){
         throw new Error("PUT not implemented by "+this.name);
     }
 
@@ -61,13 +55,11 @@ class AbstractRequestAdapter {
      * Perform a DELETE request
      * @param {string} url
      * @param {object} data
-     * @param {function} callback
-     * @param {object} callbackThis
+     * @return Promise
      * @throws Error Error when not implemented
      * TODO Create not-implemented error
-     * TODO Replace callback with promise
      */
-    del(url, data, callback, callbackThis){
+    del(url, data){
         throw new Error("DEL not implemented by "+this.name);
     }
 

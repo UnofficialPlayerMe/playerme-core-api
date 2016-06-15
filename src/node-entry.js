@@ -69,7 +69,10 @@ if (process.env.NODE_ENV === 'development') {
     // });
 
     console.log("Load user...");
-    entry.UsersRepository.get(1);
+    entry.UsersRepository.get(1).then((user)=>{
+        console.log('');
+        console.log('User', user);
+    })
 }
 
 // setInterval(()=>{ console.log("Keep-alive tick") }, 5*1000);

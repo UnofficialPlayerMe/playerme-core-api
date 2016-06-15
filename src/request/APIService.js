@@ -35,9 +35,8 @@ class APIService extends AbstractRequestAdapter{
     // Request Methods
     //
 
-    // TODO Use promises, rather than callbacks?
     // TODO Have success & failure classes
-    _request(method, url, data, callback, callbackThis){
+    _request(method, url, data){
         var requestBodyRequired = false;
         switch(method){
             case 'get':  requestBodyRequired = false; break;
@@ -49,28 +48,26 @@ class APIService extends AbstractRequestAdapter{
 
         validateURL(method, url);
         validateData(method, data, requestBodyRequired);
-        validateCallback(method, callback, callbackThis);
 
         var adapter = this.getAdapter(true);
         url = this.prependBaseUrl(url);
-
-        return adapter[method](url, data, callback, callbackThis);
+        return adapter[method](url, data);
     }
 
-    get(url, data, callback, callbackThis){
-        return this._request('get', url, data, callback, callbackThis);
+    get(url, data){
+        return this._request('get', url, data);
     }
 
-    post(url, data, callback, callbackThis){
-        return this._request('post', url, data, callback, callbackThis);
+    post(url, data){
+        return this._request('post', url, data);
     }
 
-    put(url, data, callback, callbackThis){
-        return this._request('put', url, data, callback, callbackThis);
+    put(url, data){
+        return this._request('put', url, data);
     }
 
-    del(url, data, callback, callbackThis){
-        return this._request('del', url, data, callback, callbackThis);
+    del(url, data){
+        return this._request('del', url, data);
     }
 
     //
@@ -196,11 +193,16 @@ class APIService extends AbstractRequestAdapter{
  * @throws {ReferenceError}
  */
 function validateURL(method, url){
+    var msg;
     if (!url){
-        throw new ReferenceError("No URL passed to APIService:"+method+".");
+        msg = "No URL passed to APIService:"+method+".";
+        console.error(msg);
+        throw new ReferenceError(msg);
     }
     if (typeof url != 'string'){
-        throw new ReferenceError("Invalid URL passed to APIService:"+method+". Was ["+typeof url+"].");
+        msg = "Invalid URL passed to APIService:"+method+". Was ["+typeof url+"].";
+        console.error(msg);
+        throw new ReferenceError(msg);
     }
 }
 
@@ -212,30 +214,14 @@ function validateURL(method, url){
  * @throws {ReferenceError}
  */
 function validateData(method, data, required){
+    var msg;
     if (!required && !data){
         return;
     }
     if (typeof data != 'object'){
-        throw new ReferenceError("Invalid data passed to APIService:"+method+". Was ["+typeof data+"].");
-    }
-}
-
-/**
- * Validate that the callback is valid
- * @param {string} method Name of the method this is being called in
- * @param {function} callback The callback when the request has been fulfilled
- * @param {object} [callbackThis] The 'this' to use on the callback
- * @throws {ReferenceError}
- */
-function validateCallback(method, callback, callbackThis){
-    if (!callback){
-        throw new ReferenceError("No callback passed to APIService:"+method+".");
-    }
-    if (typeof callback != 'function'){
-        throw new ReferenceError("Invalid callback passed to APIService:"+method+". Was ["+typeof callback+"].");
-    }
-    if (callbackThis && typeof callbackThis != 'object'){
-        throw new ReferenceError("Invalid callbackThis passed to APIService:"+method+". Was ["+typeof callbackThis+"].");
+        msg = "Invalid data passed to APIService:"+method+". Was ["+typeof data+"].";
+        console.error(msg);
+        throw new ReferenceError(msg);
     }
 }
 

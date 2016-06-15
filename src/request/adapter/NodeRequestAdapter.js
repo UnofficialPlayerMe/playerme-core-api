@@ -17,12 +17,11 @@ class NodeRequestAdapter extends AbstractRequestAdapter{
      * Issue a request
      * @param {string} method The request method
      * @param {string} url The target URL
-     * @param {object} body The request body
-     * @param {function} callback Callback upon completion
-     * @param {object} [callbackThis] The 'this' to apply to the callback
+     * @param {object} [body] The request body
+     * @return Promise
      * @private
      */
-    _request(method, url, body, callback, callbackThis){
+    _request(method, url, body){
         var urlObject = URL.parse(url);
 
         var options = {
@@ -32,42 +31,51 @@ class NodeRequestAdapter extends AbstractRequestAdapter{
             path: urlObject.path
         };
 
-        HTTPS.request(options, (response)=>{
-            var str = '';
+        return new Promise((resolve, reject)=>{ // TODO Reject errors
+            var request = HTTPS.request(options, (response)=>{
 
-            //another chunk of data has been received, so append it to `str`
-            response.on('data', (chunk)=>{
-                str += chunk;
+                var str = '';
+
+                //another chunk of data has been received, so append it to `str`
+                response.on('data', (chunk)=>{ str += chunk });
+
+                //the whole response has been received, so we just print it out here
+                response.on('end', () => {
+                    var response;
+                    try {
+                        response = JSON.parse(str);
+                    }catch(e){
+                        response = str;
+                    }
+                    resolve(response);
+                });
             });
 
-            //the whole response has been received, so we just print it out here
-            response.on('end', () => {
-                var response;
-                try {
-                    response = JSON.parse(str);
-                }catch(e){
-                    response = str;
-                }
-                callback.call(callbackThis, response);
-            });
-        }).end();
+            request.on('error', (e) => { reject(e) });
+            if (body) {
+                request.write(JSON.stringify(body));
+            }
+            request.end();
+        });
     }
 
-    get(url, data, callback, callbackThis){
+    get(url, data){
         if (data) {
             url = this.addToQueryString(url, data);
         }
-        this._request('GET', url, null, callback, callbackThis);
+        return this._request('GET', url, null);
     }
-    post(url, data, callback, callbackThis){
-        this._request('POST', url, data, callback, callbackThis);
+    post(url, data){
+        return this._request('POST', url, data);
     }
-    put(url, data, callback, callbackThis){
-        this._request('PUT', url, data, callback, callbackThis);
+    put(url, data){
+        return this._request('PUT', url, data);
     }
-    del(url, data, callback, callbackThis){
-        url = this.objectToQueryString(data);
-        this._request('DELETE', url, null, callback, callbackThis);
+    del(url, data){
+        if (data) {
+            url = this.addToQueryString(url, data);
+        }
+        return this._request('DELETE', url, null);
     }
 }
 
