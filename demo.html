@@ -21,44 +21,65 @@
 
             // List models
             for (var key in PlayerMe.API) {
-                var apiObject = PlayerMe.API[key];
-                var instance = null;
-                var properties = [];
-                var type = typeof apiObject;
+                listObject(key, PlayerMe.API[key], apiList);
+            }
+        }
 
-                switch (typeof apiObject){
-                    case 'function':
-                        if (apiObject.name) type = apiObject.name;
+        function listObject(key, apiObject, apiList, maxDepth, currentDepth) {
+            if (typeof maxDepth != 'number') maxDepth = 5;
+            if (typeof currentDepth != 'number') currentDepth = 0;
+
+            var instance = null;
+            var properties = [];
+            var type = typeof apiObject;
+
+            switch (typeof apiObject) {
+                case 'function':
+                    if (apiObject.constructor.name !== 'Function') { //Is a class
+                        type = apiObject.name;
                         instance = new apiObject;
                         properties = Object.getOwnPropertyNames(apiObject.prototype);
-                        break;
-                    case 'object':
-                        type = Object.getPrototypeOf(apiObject).constructor.name;
-                        instance = apiObject;
-                        properties = Object.getOwnPropertyNames(apiObject);
-                        break;
-                }
+                    }
+                    break;
+                case 'object':
+                    type = Object.getPrototypeOf(apiObject).constructor.name;
+                    instance = apiObject;
+                    properties = getAllProperties(apiObject);
+                    break;
+            }
 
-                // Add to list
-                var listItem = document.createElement("LI");
-                listItem.innerHTML = "<h3 style='margin-bottom:0'>"+
-                        key + " : <span style='color:grey'>"+type+"</span>"+
-                        "</h3>";
-                apiList.appendChild(listItem);
+            // Add to list
+            var listItem = document.createElement("LI");
+            var headerNumber = "h"+(currentDepth+2);
+            listItem.innerHTML = "<"+headerNumber+" style='margin-bottom:0'>"+
+                    key + " : <span style='color:grey'>"+type+"</span>"+
+                    "</"+headerNumber+">";
+            apiList.appendChild(listItem);
 
-                // List members
+            // List members
+            if (instance && currentDepth <= maxDepth) {
                 var subList = document.createElement("UL");
-                for (var i in properties) {
-                    var prop = properties[i];
-                    var propType = Object.getPrototypeOf(instance[prop]).constructor.name;
-
-                    var listSubItem = document.createElement("LI");
-                    listSubItem.innerHTML = prop+" : <span style='color:grey'>"+propType+"</span>";
-                    subList.appendChild(listSubItem);
-                    listItem.appendChild(subList);
+                listItem.appendChild(subList);
+                for (var propKey in properties) {
+                    var prop = properties[propKey];
+                    listObject(propKey, prop, subList, maxDepth, currentDepth+1);
                 }
             }
-        } // End of onLoad
+        }
+
+        function getAllProperties(instance){
+            var result = {};
+            if (typeof instance === 'object') {
+                do {
+                    var props = Object.getOwnPropertyNames(instance);
+                    props.forEach(function(prop){
+                        if (typeof result[prop] !== 'undefined') return;
+                        result[prop] = instance[prop];
+                    })
+                } while (instance = Object.getPrototypeOf(instance));
+            }
+            return result;
+        }
 
         function alertObject(title, obj){
             var body = '';
