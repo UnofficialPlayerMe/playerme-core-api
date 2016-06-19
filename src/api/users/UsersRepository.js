@@ -1,6 +1,8 @@
 import APIService from '../../request/APIService';
 import {UserExtendedModel} from 'player-core-models';
 
+import {Response, CollectionResponse} from '../responses';
+
 /**
  *
  */
@@ -36,12 +38,13 @@ class UsersRepository {
                 return;
             }
 
-            promise.then((response)=>{
-                if (response.results){
-                    console.log('UsersRepository', response); //TODO Custom response class
-                    resolve(new UserExtendedModel(response.results));
+            promise.then((rawRespomse)=>{
+                if (rawRespomse.results){
+                    resolve(
+                        new Response(rawRespomse, UserExtendedModel)
+                    );
                 } else {
-                    reject(response);
+                    reject(rawRespomse); //TODO Error response
                 }
             });
         });
