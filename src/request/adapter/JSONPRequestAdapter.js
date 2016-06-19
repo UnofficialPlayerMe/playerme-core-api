@@ -12,7 +12,7 @@ class JSONPRequestAdapter extends AbstractRequestAdapter{
 
         /**
          * The next ID to use in a callback reference name
-         * @@member {number}
+         * @member {int}
          * @private
          */
         this._lastCallbackId = 0;

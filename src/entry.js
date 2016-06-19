@@ -1,10 +1,6 @@
-import settings from './settings';
-
+import settings        from './settings';
 import UsersRepository from './api/users/UsersRepository';
-
-import APIService          from './request/APIService';
-import NodeRequestAdapter  from './request/adapter/NodeRequestAdapter';
-import JSONPRequestAdapter from './request/adapter/JSONPRequestAdapter';
+import APIService      from './request/APIService';
 
 // Check for dependencies
 function checkDependency(variable, errorMessage){
@@ -16,18 +12,21 @@ function checkDependency(variable, errorMessage){
     }
 }
 
-checkDependency(Promise, "'Promise' isn't available on this platform and needs a pollyfill.");
+checkDependency(Promise, "'Promise' isn't available on this platform and needs a polyfill.");
 
 // Environment setup
 if (typeof window !== 'undefined'){ // If browser
-    APIService.setAdapter(JSONPRequestAdapter);
+    APIService.setAdapter(
+        require('./request/adapter/JSONPRequestAdapter')
+    );
 } else { // If NodeJs
-    APIService.setAdapter(NodeRequestAdapter);
+    APIService.setAdapter(
+        require('./request/adapter/NodeRequestAdapter')
+    );
 }
 
 export {
     settings,
     APIService,
-
     UsersRepository
 };
