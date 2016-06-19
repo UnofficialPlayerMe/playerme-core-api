@@ -17,11 +17,11 @@ checkDependency(Promise, "'Promise' isn't available on this platform and needs a
 // Environment setup
 if (typeof window !== 'undefined'){ // If browser
     APIService.setAdapter(
-        require('./request/adapter/JSONPRequestAdapter')
+        require('./request/adapter/JSONPRequestAdapter').default
     );
 } else { // If NodeJs
     APIService.setAdapter(
-        require('./request/adapter/NodeRequestAdapter')
+        require('./request/adapter/NodeRequestAdapter').default
     );
 }
 
