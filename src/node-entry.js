@@ -2,8 +2,10 @@
 import * as entry from './entry';
 import * as models from 'player-core-models';
 
+var env = process.env;
+
 // Debug logging
-if (process.env.NODE_ENV === 'development') {
+if (env.NODE_ENV === 'development') {
 
     // Startup test, checking ES2015 is supported
     try {
@@ -68,11 +70,34 @@ if (process.env.NODE_ENV === 'development') {
     //     console.log("Comment result:", payload);
     // });
 
-    console.log("Load user...");
-    entry.UsersRepository.get(1).then((user)=>{
-        console.log('');
-        console.log('User', user);
-    })
+    // console.log("Load user...");
+    // entry.UsersRepository.get(1).then((user)=>{
+    //     console.log('');
+    //     console.log('User', user);
+    // })
 }
 
 // setInterval(()=>{ console.log("Keep-alive tick") }, 5*1000);
+
+var username = env.PLAYER_USERNAME;
+var password = env.PLAYER_PASSWORD;
+var baseUrl  = env.PLAYER_BASE_URL;
+
+// Override baseUrl
+if (baseUrl){
+    entry.APIService.baseUrl = baseUrl;
+}
+
+// Login
+if (username && password) {
+    try{
+        entry.AuthService.login(
+            username, password
+        ).then(
+            (response) => console.log('Login response', response),
+            (error) => console.error('Login error', error)
+        );
+    }catch(e){
+        console.error(e);
+    }
+}

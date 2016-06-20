@@ -8,11 +8,6 @@ import HTTPS from 'https';
  * For use in environments where cross-domain requests isn't an issue (i.e. Node.js, Cordova, etc)
  */
 class NodeRequestAdapter extends AbstractRequestAdapter{
-    constructor()
-    {
-        super();
-    }
-
     /**
      * Issue a request
      * @param {string} method The request method
@@ -23,12 +18,17 @@ class NodeRequestAdapter extends AbstractRequestAdapter{
      */
     _request(method, url, body){
         var urlObject = URL.parse(url);
+        var json = body ? JSON.stringify(body) : '';
 
         var options = {
             method: method,
             host: urlObject.hostname,
             port: urlObject.port,
-            path: urlObject.path
+            path: urlObject.path,
+            headers: {
+                "Content-Type": "application/json",
+                "Content-Length": Buffer.byteLength(json)
+            }
         };
 
         return new Promise((resolve, reject)=>{ // TODO Reject errors
@@ -52,8 +52,8 @@ class NodeRequestAdapter extends AbstractRequestAdapter{
             });
 
             request.on('error', (e) => { reject(e) });
-            if (body) {
-                request.write(JSON.stringify(body));
+            if (json) {
+                request.write(json);
             }
             request.end();
         });

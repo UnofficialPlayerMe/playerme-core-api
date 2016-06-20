@@ -1,4 +1,5 @@
 import settings        from './settings';
+import AuthService     from './api/auth/AuthService';
 import UsersRepository from './api/users/UsersRepository';
 import APIService      from './request/APIService';
 
@@ -28,5 +29,6 @@ if (typeof window !== 'undefined'){ // If browser
 export {
     settings,
     APIService,
+    AuthService,
     UsersRepository
 };

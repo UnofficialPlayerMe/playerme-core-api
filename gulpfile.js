@@ -10,6 +10,11 @@ var nodemon       = require('gulp-nodemon');
 var Log = require('./gulp/logging');
 var Utils = require('playerme-core-utils');
 
+var Env = {};
+try{
+    Env = require('./env');
+}catch(e){}
+
 //////////////////////////////////////
 
 gulp.task('default', ['build:web']);
@@ -54,8 +59,13 @@ gulp.task('build:node', function() {
 
 gulp.task('run:node', function() {
 
+    var env = {
+        'NODE_ENV': 'development'
+    };
+    for (var envKey in Env) env[envKey] = Env[envKey];
+
     var stream = nodemon({
-        env: { 'NODE_ENV': 'development' }
+        env: env
     ,   script: './dist/node-playerme.api.js'
     ,   watch: 'src'
     ,   ext: 'js'
