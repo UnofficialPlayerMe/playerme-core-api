@@ -1,17 +1,10 @@
 import APIService from '../../request/APIService';
-import {UserExtendedModel} from 'player-core-models';
-
-import {Response, CollectionResponse} from '../responses';
+import UserEntityResponse from './UserEntityResponse';
 
 /**
  *
  */
 class UsersRepository {
-    constructor()
-    {
-
-    }
-
     /**
      *
      * @param {number|string} id The user's ID
@@ -38,13 +31,13 @@ class UsersRepository {
                 return;
             }
 
-            promise.then((rawRespomse)=>{
-                if (rawRespomse.results){
+            promise.then((response)=>{
+                if (response.success){
                     resolve(
-                        new Response(rawRespomse, UserExtendedModel)
+                        new UserEntityResponse(response)
                     );
                 } else {
-                    reject(rawRespomse); //TODO Error response
+                    reject(response); //TODO Error response
                 }
             });
         });

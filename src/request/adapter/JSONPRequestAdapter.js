@@ -1,5 +1,6 @@
 import AbstractRequestAdapter from './AbstractRequestAdapter';
 import {createQueryString} from '../helpers/AdapterHelper';
+import RawResponse from '../response/RawResponse';
 
 /**
  * Process requests using JSONP.
@@ -101,7 +102,9 @@ class JSONPRequestAdapter extends AbstractRequestAdapter{
                         // Remove script and callback
                         documentHead.removeChild(scriptElement);
                         delete this._callbackContainer[callbackRef];
-                        resolve(payload);
+                        resolve(
+                            new RawResponse(payload)
+                        );
                     }catch(e){
                         reject(e);
                     }

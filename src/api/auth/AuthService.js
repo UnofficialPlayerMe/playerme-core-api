@@ -1,6 +1,5 @@
 import APIService from '../../request/APIService';
-import {UserExtendedModel} from 'player-core-models';
-import {Response, CollectionResponse} from '../responses';
+import LoginResponse from './LoginResponse';
 
 /**
  *
@@ -46,7 +45,7 @@ class AuthService {
 
             promise.then((rawResponse)=>{
                 resolve(
-                    new Response(rawResponse, UserExtendedModel)
+                    new LoginResponse(rawResponse)
                 );
             });
         });

@@ -1,4 +1,5 @@
 import AbstractRequestAdapter from './AbstractRequestAdapter';
+import RawResponse from '../response/RawResponse';
 
 import URL from 'url';
 import HTTPS from 'https';
@@ -41,13 +42,18 @@ class NodeRequestAdapter extends AbstractRequestAdapter{
 
                 //the whole response has been received, so we just print it out here
                 response.on('end', () => {
-                    var response;
                     try {
-                        response = JSON.parse(str);
-                    }catch(e){
-                        response = str;
+                        resolve(
+                            new RawResponse(
+                                JSON.parse(str),
+                                response.statusCode,
+                                response.statusMessage,
+                                response.headers
+                            )
+                        );
+                    } catch(e) {
+                        return reject(str); //TODO Error response
                     }
-                    resolve(response);
                 });
             });
 
