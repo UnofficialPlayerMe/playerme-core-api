@@ -22,6 +22,7 @@ class RawResponse {
     /**
      * The body of the request
      * @returns {Object}
+     * @readonly
      */
     get body(){
         return this._body;
@@ -30,6 +31,7 @@ class RawResponse {
     /**
      * The result of the request
      * @returns {Object}
+     * @readonly
      */
     get results(){
         return this._results;
@@ -38,6 +40,7 @@ class RawResponse {
     /**
      * Whether this response was successful
      * @returns {boolean}
+     * @readonly
      */
     get success(){
         return this._success;
@@ -64,6 +67,7 @@ class RawResponse {
     /**
      * The resulting status code
      * @returns {int}
+     * @readonly
      */
     get statusCode(){
         return this._statusCode;
@@ -72,6 +76,7 @@ class RawResponse {
     /**
      * The resulting status message
      * @returns {string}
+     * @readonly
      */
     get statusMessage(){
         return this._statusMessage;
@@ -80,6 +85,7 @@ class RawResponse {
     /**
      * The result headers
      * @returns {string[]}
+     * @readonly
      */
     get headers(){
         return this._headers;

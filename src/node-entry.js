@@ -94,7 +94,17 @@ if (username && password) {
         entry.AuthService.login(
             username, password
         ).then(
-            (response) => console.log('Login response', response),
+            (response) => {
+                console.log('Login response', {
+                    success:        response.success,
+                    method:         response.method,
+                    uri:            response.uri,
+                    statusCode:     response.statusCode,
+                    statusMessage:  response.statusMessage,
+                    headers:        response.headers,
+                    result:         response.result
+                });
+            },
             (error) => console.error('Login error', error)
         );
     }catch(e){

@@ -64,6 +64,10 @@ gulp.task('run:node', function() {
     };
     for (var envKey in Env) env[envKey] = Env[envKey];
 
+    if (env.PLAYER_USERNAME && env.PLAYER_BASE_URL){
+        Log.green('Using "'+env.PLAYER_USERNAME+'" on "'+env.PLAYER_BASE_URL+'".');
+    }
+
     var stream = nodemon({
         env: env
     ,   script: './dist/node-playerme.api.js'

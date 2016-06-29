@@ -56,9 +56,64 @@ class AbstractResponse {
     /**
      * The name of this instance's class
      * @returns {string}
+     * @readonly
      */
     get className(){
         return this.constructor.name;
+    }
+
+    /**
+     * Whether the response was successful
+     * @returns {boolean}
+     * @readonly
+     */
+    get success(){
+        return this._raw.success;
+    }
+
+    /**
+     * The resulting status code
+     * @returns {int}
+     * @readonly
+     */
+    get statusCode(){
+        return this._raw.statusCode;
+    }
+
+    /**
+     * The resulting status message
+     * @returns {string}
+     * @readonly
+     */
+    get statusMessage(){
+        return this._raw.statusMessage;
+    }
+
+    /**
+     * The result headers
+     * @returns {string[]}
+     * @readonly
+     */
+    get headers(){
+        return this._raw.headers;
+    }
+
+    /**
+     * The request method used for this response
+     * @returns {string}
+     * @readonly
+     */
+    get method(){
+        return this._raw.method;
+    }
+
+    /**
+     * The request URI used for this response
+     * @returns {string}
+     * @readonly
+     */
+    get uri(){
+        return this._raw.uri;
     }
 }
 
