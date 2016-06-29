@@ -1,9 +1,12 @@
 /**
- * The paging status
+ * The paging status of a request
  */
 class PagerData{
-    constructor(rawObject){
-        this._raw = rawObject;
+    /**
+     * @param {object} rawPager The paging data in a RawResponse body.
+     */
+    constructor(rawPager){
+        this._raw = rawPager;
     }
 
     /**

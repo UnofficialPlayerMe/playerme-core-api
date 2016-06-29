@@ -1,28 +1,21 @@
-import AbstractResponse     from '../../request/response/AbstractResponse';
-import PagerData            from '../../request/response/PagerData';
-import {UserExtendedModel}  from 'player-core-models';
+import CollectionResponse from '../../request/response/CollectionResponse';
+import {UserExtendedModel} from 'player-core-models';
 
 /**
  * Response containing a collection of users
  */
-class UserCollectionResponse extends AbstractResponse {
+class UserCollectionResponse extends CollectionResponse {
     constructor(rawResponse)
     {
-        super(rawResponse);
-
-        //TODO throw exceptions if response is invalid
-
-        this._users = rawResponse.results.map(function(result){
-            return new UserExtendedModel(result);
-        });
-        this._pager = new PagerData(rawObject.pager);
+        super(UserExtendedModel, rawResponse);
     }
 
     /**
+     * The users
      * @returns {UserExtendedModel[]}
      */
-    get users(){
-        return this._users;
+    get results(){
+        return this._results;
     }
 }
 

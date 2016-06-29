@@ -1,24 +1,21 @@
-import AbstractResponse from '../../request/response/AbstractResponse';
+import EntityResponse from '../../request/response/EntityResponse';
 import {UserExtendedModel} from 'player-core-models';
 
 /**
  * Response containing a single user
  */
-class LoginResponse extends AbstractResponse {
+class LoginResponse extends EntityResponse {
     constructor(rawResponse)
     {
-        super(rawResponse);
-
-        //TODO throw exceptions if response is invalid
-        
-        this._user = new UserExtendedModel(rawResponse.result);
+        super(UserExtendedModel, rawResponse);
     }
 
     /**
+     * The user
      * @returns {UserExtendedModel}
      */
-    get user(){
-        return this._user;
+    get result(){
+        return this._result;
     }
 }
 

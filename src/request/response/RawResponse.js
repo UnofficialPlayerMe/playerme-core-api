@@ -1,5 +1,5 @@
 /**
- * A generic player response
+ * A class representing the raw output from player.
  */
 class RawResponse {
     /**
