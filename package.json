@@ -38,6 +38,7 @@
     "webpack-stream": "~3.2.0"
   },
   "dependencies": {
+    "cookie": "^0.3.1",
     "playerme-core-models": "git+https://github.com/UnofficialPlayerMe/playerme-core-models.git"
   }
 }

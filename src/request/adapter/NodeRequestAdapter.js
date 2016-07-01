@@ -3,6 +3,24 @@ import RawResponse from '../response/RawResponse';
 
 import URL from 'url';
 import HTTPS from 'https';
+import Cookie from 'cookie'; // TODO Split request adapter out, as 'cookie' module isn't required for web
+
+var cookieJar = [];
+
+function getSessionCookie(hostname){
+    var cookies = cookieJar[hostname] || [];
+
+    for (var i in cookies){
+        var cookie = cookies[i];
+
+        for (var key in cookie) {
+            if (key === 'playerme_session' || key === 'staging_playerme_session') {
+                return key+"="+cookie[key];
+            }
+        }
+    }
+    return null;
+}
 
 /**
  * Process requests using https://www.npmjs.com/package/request
@@ -32,6 +50,11 @@ class NodeRequestAdapter extends AbstractRequestAdapter{
             }
         };
 
+        var sessionCookie = getSessionCookie(urlObject.hostname);
+        if (sessionCookie){
+            options.headers['Cookie'] = sessionCookie;
+        }
+
         return new Promise((resolve, reject)=>{ // TODO Reject errors
             var request = HTTPS.request(options, (response)=>{
 
@@ -43,6 +66,13 @@ class NodeRequestAdapter extends AbstractRequestAdapter{
                 //the whole response has been received, so we just print it out here
                 response.on('end', () => {
                     try {
+                        // Store cookies
+                        var setCookie = response.headers['set-cookie'];
+                        if (setCookie) {
+                            cookieJar[urlObject.hostname] = setCookie.map((current) => Cookie.parse(current));
+                        }
+
+                        // Resolve response
                         resolve(
                             new RawResponse(
                                 JSON.parse(str),

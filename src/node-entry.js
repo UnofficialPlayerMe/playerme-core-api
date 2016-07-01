@@ -2,6 +2,8 @@
 import * as entry from './entry';
 import * as models from 'player-core-models';
 
+import APIService from './request/APIService';
+
 var env = process.env;
 
 // Debug logging
@@ -104,6 +106,14 @@ if (username && password) {
                     headers:        response.headers,
                     result:         response.result
                 });
+
+                console.log('');
+                console.log("Get feed...");
+
+                APIService.get('api/v1/feed').then(
+                    (success)=> console.log("Success", success),
+                    (failure)=> console.log("Failure", failure)
+                );
             },
             (error) => console.error('Login error', error)
         );
