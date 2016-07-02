@@ -40,5 +40,11 @@
   "dependencies": {
     "cookie": "^0.3.1",
     "playerme-core-models": "git+https://github.com/UnofficialPlayerMe/playerme-core-models.git"
+  },
+  "scripts": {
+    "build-web": "gulp build:web",
+    "build-node": "gulp build:node",
+    "browse-unsecure-linux":  "google-chrome %U --disable-web-security",
+    "browse-unsecure-windows": "start chrome %U --disable-web-security"
   }
 }

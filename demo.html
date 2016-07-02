@@ -125,6 +125,27 @@
                 return;
             }
         }
+
+        function login(form){
+            var username = form.children.username.value;
+            var password = form.children.password.value;
+
+            if (username && password) {
+                console.log("Log in...");
+                PlayerMe.API.AuthService.login(username, password, false).then(
+                    function(success){
+                        console.log("Success", typeof success, success);
+                        alert('Login success\n'+JSON.stringify(success));
+                    },
+                    function(failure){
+                        console.log("Failure", {failure:failure});
+                        alert('Login failure\n'+failure);
+                    }
+                );
+            } else {
+                alert("Username and password required");
+            }
+        }
     </script>
 
 </head>
@@ -132,7 +153,19 @@
 
 <h1>API Test Page</h1>
 
+
+<h2>Log in</h2>
+<h3>TODO Add non-JSONP adapter for web</h3>
+<form>
+    Username: <input type="text" name="username">
+    Password: <input type="text" name="password">
+    <INPUT type="button" value="Log in" onClick="login(this.form)">
+</form>
+
+<hr>
+
 <h2>Test Actions</h2>
+
 <p>
     <button onclick="clickedRequest('api/v1/feed')">Request Feed</button>
     <button onclick="clickedRequest('api/v1/users/me')">Request User</button>
@@ -140,6 +173,8 @@
 <p>
     <button onclick="clickedUsersRepository(1)">UsersRepository GET</button>
 </p>
+
+<hr>
 
 <h2>Module Members</h2>
 <ul id="apiList"></ul>
