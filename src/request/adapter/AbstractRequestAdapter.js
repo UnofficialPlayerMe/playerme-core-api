@@ -16,7 +16,20 @@ class AbstractRequestAdapter {
     }
 
     /**
-     * Perform a GET request
+     * Submit request
+     * @param {string} method
+     * @param {string} url
+     * @param {object} data
+     * @return Promise
+     * @throws Error Error when not implemented
+     * TODO Create not-implemented error
+     */
+    request(method, url, data){
+        throw new Error("request() not implemented by "+this.name);
+    }
+
+    /**
+     * Submit a GET request
      * @param {string} url
      * @param {object} data
      * @return Promise
@@ -28,7 +41,7 @@ class AbstractRequestAdapter {
     }
 
     /**
-     * Perform a POST request
+     * Submit a POST request
      * @param {string} url
      * @param {object} data
      * @return Promise
@@ -40,7 +53,7 @@ class AbstractRequestAdapter {
     }
 
     /**
-     * Perform a PUT request
+     * Submit a PUT request
      * @param {string} url
      * @param {object} data
      * @return Promise
@@ -52,7 +65,7 @@ class AbstractRequestAdapter {
     }
 
     /**
-     * Perform a DELETE request
+     * Submit a DELETE request
      * @param {string} url
      * @param {object} data
      * @return Promise
@@ -116,7 +129,7 @@ class AbstractRequestAdapter {
         // Return
         var result = url;
         if (resultParts.length){
-            result += '?'+resultParts.join('&');
+            result += '?'+resultParts.join('&').replace(/%20/g, '+');
         }
         return result;
     }

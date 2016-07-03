@@ -33,9 +33,8 @@ class NodeRequestAdapter extends AbstractRequestAdapter{
      * @param {string} url The target URL
      * @param {object} [body] The request body
      * @return Promise
-     * @private
      */
-    _request(method, url, body){
+    request(method, url, body){
         var urlObject = URL.parse(url);
         var json = body ? JSON.stringify(body) : '';
 
@@ -99,19 +98,19 @@ class NodeRequestAdapter extends AbstractRequestAdapter{
         if (data) {
             url = this.addToQueryString(url, data);
         }
-        return this._request('GET', url, null);
+        return this.request('GET', url, null);
     }
     post(url, data){
-        return this._request('POST', url, data);
+        return this.request('POST', url, data);
     }
     put(url, data){
-        return this._request('PUT', url, data);
+        return this.request('PUT', url, data);
     }
     del(url, data){
         if (data) {
             url = this.addToQueryString(url, data);
         }
-        return this._request('DELETE', url, null);
+        return this.request('DELETE', url, null);
     }
 }
 

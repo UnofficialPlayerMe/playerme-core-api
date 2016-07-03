@@ -110,14 +110,13 @@ function getRawResponse(XHR) {
  */
 class XMLHttpRequestAdapter extends AbstractRequestAdapter {
     /**
-     *
+     * Submit a request
      * @param {string} method
      * @param {string} url
      * @param {Object} [data]
      * @returns {Promise}
-     * @private
      */
-    _request(method, url, data=null){
+    request(method, url, data=null){
         return new Promise((resolve, reject)=>{
             var XHR = new XMLHttpRequest();
             var urlObject = parseUrl(url);
@@ -166,20 +165,44 @@ class XMLHttpRequestAdapter extends AbstractRequestAdapter {
         });
     }
 
+    /**
+     * Submit a GET request
+     * @param {string} url
+     * @param {Object} data
+     * @returns {Promise}
+     */
     get(url, data){
-        return this._request('GET', url + createQueryString(data));
+        return this.request('GET', url + createQueryString(data));
     }
 
-    post(){
-        throw new Error("POST method not available for XMLHttpRequestAdapter")
+    /**
+     * Submit a POST request
+     * @param {string} url
+     * @param {Object} data
+     * @returns {Promise}
+     */
+    post(url, data){
+        return this.request('POST', url, data);
     }
 
-    put(){
-        throw new Error("PUT method not available for XMLHttpRequestAdapter")
+    /**
+     * Submit a PUT request
+     * @param {string} url
+     * @param {Object} data
+     * @returns {Promise}
+     */
+    put(url, data){
+        return this.request('PUT', url, data);
     }
 
-    del(){
-        throw new Error("DELETE method not available for XMLHttpRequestAdapter")
+    /**
+     * Submit a DELETE request
+     * @param {string} url
+     * @param {Object} data
+     * @returns {Promise}
+     */
+    del(url, data){
+        return this.request('DELETE', url, data);
     }
 }
 
