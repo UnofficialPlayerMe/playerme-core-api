@@ -4,10 +4,10 @@
 class RawResponse {
     /**
      *
-     * @param {Object}   body           The raw response body
-     * @param {int}      statusCode     The status code
-     * @param {string}   statusMessage  The status code's message
-     * @param {string[]} headers        Result headers
+     * @param {Object}                  body           The raw response body
+     * @param {int}                     statusCode     The status code
+     * @param {string}                  statusMessage  The status code's message
+     * @param {Object.<string,string>}  headers        Result headers
      */
     constructor(body, statusCode, statusMessage, headers)
     {
