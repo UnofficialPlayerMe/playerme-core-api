@@ -44,7 +44,7 @@
   "scripts": {
     "build-web": "gulp build:web",
     "build-node": "gulp build:node",
-    "browse-unsecure-linux":  "google-chrome %U --disable-web-security",
-    "browse-unsecure-windows": "start chrome %U --disable-web-security"
+    "browse-insecure-linux":  "google-chrome %U --disable-web-security --user-data-dir",
+    "browse-insecure-windows": "start chrome %U --disable-web-security --user-data-dir"
   }
 }
