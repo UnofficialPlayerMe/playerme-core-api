@@ -1,5 +1,4 @@
 import AbstractRequestAdapter from './AbstractRequestAdapter';
-import {createQueryString} from '../helpers/AdapterHelper';
 import RawResponse from '../response/RawResponse';
 import Cookie from 'cookie';
 
@@ -172,7 +171,7 @@ class XMLHttpRequestAdapter extends AbstractRequestAdapter {
      * @returns {Promise}
      */
     get(url, data){
-        return this.request('GET', url + createQueryString(data));
+        return this.request('GET', this.addToQueryString(url, data));
     }
 
     /**

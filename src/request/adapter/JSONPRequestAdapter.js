@@ -1,5 +1,4 @@
 import AbstractRequestAdapter from './AbstractRequestAdapter';
-import {createQueryString} from '../helpers/AdapterHelper';
 import RawResponse from '../response/RawResponse';
 
 /**
@@ -113,12 +112,9 @@ class JSONPRequestAdapter extends AbstractRequestAdapter{
                 // Add the full callback path to player.me's JSON callback parameter
                 data.callback = this._callbackNamespace + '.' + callbackRef;
 
-                // Build query string
-                var queryString = createQueryString(data);
-
                 // Attach the script tag for this JSONP request
                 scriptElement.setAttribute("data-callback", callbackRef);
-                scriptElement.setAttribute("src", url + queryString);
+                scriptElement.setAttribute("src", this.addToQueryString(url, data));
                 documentHead.appendChild(scriptElement);
 
             }catch(e){
