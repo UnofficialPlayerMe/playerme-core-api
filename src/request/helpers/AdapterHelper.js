@@ -15,7 +15,7 @@ function createQueryString(data){
         }
     }
     if (params.length){
-        return '?' + params.join('&');
+        return '?' + params.join('&').replace(/%20/g, '+');
     }
     return '';
 }

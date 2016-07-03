@@ -10,6 +10,7 @@
     <script>
         function onLoad(){
             listModules();
+            updateAdapter();
         }
 
         function listModules() {
@@ -146,20 +147,35 @@
                 alert("Username and password required");
             }
         }
+
+        function useAdapter(name){
+            PlayerMe.API.APIService.setAdapter(PlayerMe.API.adapters[name]);
+            updateAdapter();
+        }
+        function updateAdapter(){
+            var adapterName = document.getElementById('adapterName');
+            adapterName.innerHTML = PlayerMe.API.APIService.getAdapter().name;
+        }
+
     </script>
 
 </head>
 <body onload="onLoad()">
 
 <h1>API Test Page</h1>
+<hr>
 
+<h2>Adapter: <span id="adapterName"></span></h2>
+<input type="button" value="JSONPRequestAdapter" onClick="useAdapter('JSONPRequestAdapter')">
+<input type="button" value="XMLHttpRequest" onClick="useAdapter('XMLHttpRequestAdapter')">
+
+<hr>
 
 <h2>Log in</h2>
-<h3>TODO Add non-JSONP adapter for web</h3>
 <form>
     Username: <input type="text" name="username">
     Password: <input type="text" name="password">
-    <INPUT type="button" value="Log in" onClick="login(this.form)">
+    <input type="button" value="Log in" onClick="login(this.form)">
 </form>
 
 <hr>

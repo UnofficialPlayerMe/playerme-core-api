@@ -15,18 +15,20 @@ function checkDependency(variable, errorMessage){
 
 checkDependency(Promise, "'Promise' isn't available on this platform and needs a polyfill.");
 
+var adapters = {};
+
 // Environment setup
 if (typeof window !== 'undefined'){ // If browser
-    APIService.setAdapter(
-        require('./request/adapter/JSONPRequestAdapter').default
-    );
+    adapters.JSONPRequestAdapter = require('./request/adapter/JSONPRequestAdapter').default;
+    adapters.XMLHttpRequestAdapter = require('./request/adapter/XMLHttpRequestAdapter').default;
+    APIService.setAdapter(adapters.JSONPRequestAdapter);
 } else { // If NodeJs
-    APIService.setAdapter(
-        require('./request/adapter/NodeRequestAdapter').default
-    );
+    adapters.NodeRequestAdapter = require('./request/adapter/NodeRequestAdapter').default;
+    APIService.setAdapter(adapters.NodeRequestAdapter);
 }
 
 export {
+    adapters,
     settings,
     APIService,
     AuthService,
