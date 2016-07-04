@@ -1,5 +1,6 @@
 import AbstractRequestAdapter from './AbstractRequestAdapter';
 import RawResponse from '../response/RawResponse';
+import ErrorResponse from '../response/ErrorResponse';
 import Cookie from 'cookie';
 
 var cookieJar = [];
@@ -102,6 +103,14 @@ function getRawResponse(XHR) {
         return null;
     }
 }
+function getErrorResponse(XHR) {
+    return new ErrorResponse(
+        XHR.responseText,
+        XHR.status,
+        XHR.statusText,
+        getHeadersFromXHR(XHR)
+    );
+}
 
 /**
  * Process requests using JSONP.
@@ -132,7 +141,7 @@ class XMLHttpRequestAdapter extends AbstractRequestAdapter {
                 if (response) {
                     resolve(response);
                 } else {
-                    reject(XHR.responseText);
+                    reject(getErrorResponse(XHR));
                 }
             });
 

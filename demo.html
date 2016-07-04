@@ -11,6 +11,7 @@
         function onLoad(){
             listModules();
             updateAdapter();
+            updateBaseURL();
         }
 
         function listModules() {
@@ -103,13 +104,21 @@
             }
 
             promise.then(function(payload){
-                console.log(payload);
-                var title =
-                    payload.method + " " +
-                    payload.uri + " " +
-                    (payload.success ? "(success)" : "(failure)")
-                ;
-                alertObject(title, payload);
+                try {
+                    console.log(payload);
+                    var title =
+                        payload.method + " " +
+                        payload.uri + " " +
+                        (payload.success ? "(success)" : "(failure)")
+                    ;
+                    alertObject(title, payload);
+                }catch(e){
+                    console.error(e);
+                    alertObject('Error', e);
+                }
+            }, function(payload){
+                console.error(payload);
+                alertObject('Failure', payload);
             });
         }
 
@@ -119,6 +128,8 @@
                 promise.then(function(payload){
                     console.log(payload);
                     alertObject('UsersRepository.get('+id+')', payload);
+                }, function(error){
+                    console.error(error);
                 })
             }catch(e){
                 console.error(e);
@@ -157,6 +168,15 @@
             adapterName.innerHTML = PlayerMe.API.APIService.getAdapter().name;
         }
 
+        function setBaseURL(url){
+            PlayerMe.API.APIService.baseUrl = url;
+            updateBaseURL();
+        }
+        function updateBaseURL(){
+            var adapterName = document.getElementById('baseURL');
+            adapterName.innerHTML = PlayerMe.API.APIService.baseUrl;
+        }
+
     </script>
 
 </head>
@@ -165,17 +185,20 @@
 <h1>API Test Page</h1>
 <hr>
 
-<h2>Adapter: <span id="adapterName"></span></h2>
+<h3>Adapter: <span id="adapterName"></span></h3>
 <input type="button" value="JSONPRequestAdapter" onClick="useAdapter('JSONPRequestAdapter')">
 <input type="button" value="XMLHttpRequest" onClick="useAdapter('XMLHttpRequestAdapter')">
 
-<hr>
+<h3>Environment: <span id="baseURL"></span></h3>
+<input type="button" value="Live server" onClick="setBaseURL('https://player.me')">
+<input type="button" value="Staging server" onClick="setBaseURL('https://staging.player.me')">
 
-<h2>Log in</h2>
+<h3>Log in</h3>
 <form>
     Username: <input type="text" name="username">
-    Password: <input type="text" name="password">
-    <input type="button" value="Log in" onClick="login(this.form)">
+    Password: <input type="password" name="password">
+    <input type="button" value="Log in"  onClick="login(this.form)">
+    <input type="button" value="Log out" onClick="clickedRequest('actions/logout')">
 </form>
 
 <hr>
